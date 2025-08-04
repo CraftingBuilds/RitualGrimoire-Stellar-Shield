@@ -1,0 +1,144 @@
+name: Stellar Shield
+intention: Build and sustain a protective bubble; transmute kinetic/anger energy into luminous sovereignty.
+tags:
+  - ritual
+  - shielding
+  - lightcraft
+  - soundcraft
+  - freq:741
+  - geometry:rotation
+  - sensor:mic
+  - sensor:light
+
+audio:
+  engine: tone
+  frequency_hz: 741           # FIXED generator; no sensor coupling
+  waveform: sine
+  volume: 0.70                 # fixed
+  lfo:
+    enabled: true
+    hz: 0.65                   # slow breath; not sensor-driven
+    depth: 0.08                # subtle amplitude modulation
+  envelope:
+    attack_s: 2.0
+    release_s: 2.5
+
+visual:
+  mode: generated
+  base_palette: pleiades-blue  # palette family; sensor can nudge hue within range
+  bloom: medium
+  brightness: auto             # driven by camera luminance
+  rotation_deg_s: 10           # base rotation speed (deg/sec), modulated by sensors
+  bubble:
+    base_radius_vmin: 18       # initial “aura bubble” radius (viewport min)
+    max_radius_vmin: 36        # clamp for expansion
+  shape_rotation:
+    strategy: weighted-cycle
+    neutral_cycle: [seed-of-life, hexagram, flower-of-life, merkaba]
+    calming_pool:  [vesica-piscis, seed-of-life, nested-circles]
+    strengthening_pool: [heptagram, unicursal-hexagram, cube-projection]
+    weights:
+      neutral: 0.70
+      calming: 0.15
+      strengthening: 0.15
+    on_anger_shift:
+      calming_weight: 0.65
+      strengthening_weight: 0.30
+      neutral_weight: 0.05
+  camera:
+    use_rear: true
+    fps_cap: 24
+    luminance_method: y_avg
+    downscale: [160, 120]
+
+sensors:
+  mic:
+    enabled: true
+    fft_size: 2048
+    smoothing_ms: 120
+    silence_floor_db: -55
+    high_band_split_hz: 2000
+  light:
+    enabled: true
+    smoothing_ms: 250
+    exposure_lock: true
+    motion:
+      enabled: true
+      downscale: [160, 120]
+      diff_every_n_frames: 1
+
+reactivity:
+  mappings:
+    # ambient light → brightness/bloom (auto)
+    luminance_to_brightness: { out_min: 0.55, out_max: 0.90, curve: linear }
+    luminance_to_bloom:      { out_min: 0.30, out_max: 0.80, curve: ease_in_out }
+
+    # mic energy → geometry scale/rotation (transmutation visuals)
+    mic_rms_to_scale:        { out_min: 0.98, out_max: 1.18, curve: ease_out }
+    mic_rms_to_rotation:     { out_min: 8, out_max: 14, curve: ease_in }  # deg/sec
+
+    # peaks → absorb ring & bubble expansion (short bursts, clamped)
+    spectral_flux_to_absorb: { out_min: 0.0, out_max: 1.0, decay_ms: 450 }
+    peak_to_bubble_radius:   { out_min: 0.0, out_max: 8.0, decay_ms: 900 } # vmin add
+
+    # subtle hue drift from spectral balance (still within base palette)
+    fft_bands_to_hue:
+      low: 205
+      lowmid: 215
+      mid: 200
+      high: 190
+      mix: true
+      hue_max_shift_deg: 12
+
+danger_detection:
+  # Multi-sensor fusion; trigger when >=2 conditions hold
+  thresholds:
+    rms_db: -20                # sustained loudness
+    spectral_flux: 1.9         # sudden change
+    high_band_ratio: 0.55      # energy share above ~2 kHz
+    luminance_drop_rate: 0.20  # normalized ΔY per second (sudden darkening)
+    motion_score: 0.35         # frame-diff magnitude (0–1)
+  sustain_ms: 1200             # hold above thresholds this long
+  require_any: 2               # how many signals must be true simultaneously
+  cooldown_ms: 6000            # no retrigger window
+  actions:
+    shape_bias:
+      enable: true
+      bias_duration_ms: 20000
+      weights:
+        warding: 0.55
+        containment: 0.30
+        neutral: 0.10
+        calming: 0.05
+    boundary_intensity:
+      enable: true
+      edge_gain: 1.4           # thicker, brighter edge (clamped by safety)
+      mesh_gain: 1.3           # inner lattice/mesh strength
+    absorb_boost:
+      enable: true
+      gain: 1.35               # stronger absorb ring on peaks
+    brightness_strategy: stealth  # stealth | deter | none
+    rotation_boost: modest        # modest | none
+
+safety:
+  max_visual_mod_hz: 1.5
+  min_brightness: 0.45
+  max_brightness: 0.92
+  thermal_watch: true
+  no_strobe: true
+
+session:
+  start_mode: manual
+  fullscreen: true
+  notes_prompt: true
+
+phases:
+  - id: open
+    prompt: "Three breaths. ‘I invoke the living shield of sovereign light.’"
+  - id: transmission
+    duration_s: 180             # logging cadence; UI runs until dismissed
+  - id: seal
+    gesture: "Trace hexagram at perimeter; exhale to close."
+logging:
+  enabled: true
+  fields: [start_time, end_time, anger_events, absorb_events, notes]

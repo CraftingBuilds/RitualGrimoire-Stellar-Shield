@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1,viewport-fit=cover"
+		/>
+		<title>Stellar Shield -- 741Hz</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="gate">
+			<h1>Stellar Shield</h1>
+			<p class="intent">
+				"I build and sustain a sovereign luminous shield."
+			</p>
+			<div class="toggles">
+				<label
+					><input id="useMic" type="checkbox" checked /> Use
+					Microphone</label
+				>
+				<label
+					><input id="useCam" type="checkbox" checked /> Use
+					Camera</label
+				>
+			</div>
+			<button id="startBtn">Start</button>
+			<div id="calib" class="muted"></div>
+		</div>
+
+		<canvas id="stage"></canvas>
+
+		<div id="ui">
+			<button id="dismissBtn">Dismiss</button>
+		</div>
+
+		<script type="module">
+			// --- minimal "Start" that proves each step works ---
+			const $ = (s) => document.querySelector(s);
+			function fail(msg) {
+				alert(msg);
+				$("#calib").textContent = msg;
+			}
+
+			$("#startBtn").addEventListener("click", async () => {
+				try {
+					// 1) Audio unlock on the tap
+					const ac = new (window.AudioContext ||
+						window.webkitAudioContext)();
+					await ac.resume();
+					const o = ac.createOscillator(),
+						g = ac.createGain();
+					g.gain.value = 0.0001;
+					o.connect(g).connect(ac.destination);
+					o.start();
+					o.stop(ac.currentTime + 0.05);
+					console.log("AudioContext unlocked");
+
+					// 2) Quick visual proof right now (no sensors yet)
+					$("#gate").style.display = "none";
+					$("#stage").style.display = "block";
+					$("#ui").style.display = "block";
+					const c = $("#stage"),
+						ctx = c.getContext("2d");
+					c.width = innerWidth;
+					c.height = innerHeight;
+					ctx.fillStyle = "#0b1020";
+					ctx.fillRect(0, 0, c.width, c.height);
+					ctx.fillStyle = "#cfe8ff";
+					ctx.font = "20px system-ui";
+					ctx.fillText(
+						"Start worked ✅  (sensors coming next)",
+						20,
+						40
+					);
+
+					// 3) Now try sensors (front camera)
+					const v = document.createElement("video");
+					v.muted = true;
+					v.playsInline = true;
+					const stream = await navigator.mediaDevices.getUserMedia({
+						video: { facingMode: { ideal: "user" } },
+						audio: {
+							echoCancellation: false,
+							noiseSuppression: false,
+						},
+					});
+					v.srcObject = stream;
+					await v.play();
+					console.log("Mic/Camera granted");
+
+					// 4) If you reach here, Start is 100% working.
+					//    At this point you can put back the full app code (runApp(...))
+					alert(
+						"Start pipeline OK. I can now re-enable the full ritual code."
+					);
+				} catch (e) {
+					fail("Start failed: " + (e.message || e));
+					console.error(e);
+				}
+			});
+
+			// show any silent errors
+			window.addEventListener("error", (e) =>
+				alert("JS error: " + e.message)
+			);
+			window.addEventListener("unhandledrejection", (e) =>
+				alert("Promise error: " + (e.reason?.message || e.reason))
+			);
+		</script>
+	</body>
+</html>
