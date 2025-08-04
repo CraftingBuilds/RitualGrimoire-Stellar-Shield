@@ -160,7 +160,10 @@ export class Sensors {
   async _initMic() {
     this.ac = new (window.AudioContext || window.webkitAudioContext)();
     this.sampleRate = this.ac.sampleRate;
-    const stream = await navigator.mediaDevices.getUserMedia({video: { facingMode: { ideal: 'user' }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: this.opts.cam.fps } },audio: false});
+    const stream = await navigator.mediaDevices.getUserMedia({
+  audio: true,
+  video: { facingMode: "user" } // 👈 this forces front camera
+});
     this.analyser = this.ac.createAnalyser();
     this.analyser.fftSize = this.opts.mic.fftSize;
     this.analyser.minDecibels = -120;
@@ -172,9 +175,9 @@ export class Sensors {
 
   async _initCamera() {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: this.opts.cam.fps } },
-      audio: false
-    });
+  audio: true,
+  video: { facingMode: "user" } // 👈 this forces front camera
+});
     this.video.srcObject = stream;
     await this.video.play();
   }

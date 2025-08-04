@@ -1,113 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width,initial-scale=1,viewport-fit=cover"
-		/>
-		<title>Stellar Shield -- 741Hz</title>
-		<link rel="stylesheet" href="style.css" />
-	</head>
-	<body>
-		<div id="gate">
-			<h1>Stellar Shield</h1>
-			<p class="intent">
-				"I build and sustain a sovereign luminous shield."
-			</p>
-			<div class="toggles">
-				<label
-					><input id="useMic" type="checkbox" checked /> Use
-					Microphone</label
-				>
-				<label
-					><input id="useCam" type="checkbox" checked /> Use
-					Camera</label
-				>
-			</div>
-			<button id="startBtn">Start</button>
-			<div id="calib" class="muted"></div>
-		</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellar Shield</title>
+  <style>
+    body {
+      background-color: #0d0d1a;
+      color: #f0f8ff;
+      font-family: "Segoe UI", sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
 
-		<canvas id="stage"></canvas>
+    h1 {
+      font-size: 2em;
+      margin-bottom: 1em;
+      color: #a8d8ff;
+    }
 
-		<div id="ui">
-			<button id="dismissBtn">Dismiss</button>
-		</div>
+    button {
+      font-size: 1.2em;
+      padding: 0.7em 1.5em;
+      background-color: #282c34;
+      color: #fff;
+      border: 2px solid #a8d8ff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
 
-		<script type="module">
-			// --- minimal "Start" that proves each step works ---
-			const $ = (s) => document.querySelector(s);
-			function fail(msg) {
-				alert(msg);
-				$("#calib").textContent = msg;
-			}
+    button:hover {
+      background-color: #1f3b75;
+    }
 
-			$("#startBtn").addEventListener("click", async () => {
-				try {
-					// 1) Audio unlock on the tap
-					const ac = new (window.AudioContext ||
-						window.webkitAudioContext)();
-					await ac.resume();
-					const o = ac.createOscillator(),
-						g = ac.createGain();
-					g.gain.value = 0.0001;
-					o.connect(g).connect(ac.destination);
-					o.start();
-					o.stop(ac.currentTime + 0.05);
-					console.log("AudioContext unlocked");
+    #status {
+      margin-top: 2em;
+      font-size: 1em;
+    }
 
-					// 2) Quick visual proof right now (no sensors yet)
-					$("#gate").style.display = "none";
-					$("#stage").style.display = "block";
-					$("#ui").style.display = "block";
-					const c = $("#stage"),
-						ctx = c.getContext("2d");
-					c.width = innerWidth;
-					c.height = innerHeight;
-					ctx.fillStyle = "#0b1020";
-					ctx.fillRect(0, 0, c.width, c.height);
-					ctx.fillStyle = "#cfe8ff";
-					ctx.font = "20px system-ui";
-					ctx.fillText(
-						"Start worked ✅  (sensors coming next)",
-						20,
-						40
-					);
+    video {
+      margin-top: 1.5em;
+      max-width: 100%;
+      border: 2px solid #a8d8ff;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌌 Stellar Shield</h1>
+  <p>Activate your energetic defense field using sound and cosmic frequencies.</p>
+  <button id="startButton">🛡️ Start Shield</button>
+  <div id="status">Awaiting activation...</div>
 
-					// 3) Now try sensors (front camera)
-					const v = document.createElement("video");
-					v.muted = true;
-					v.playsInline = true;
-					const stream = await navigator.mediaDevices.getUserMedia({
-						video: { facingMode: { ideal: "user" } },
-						audio: {
-							echoCancellation: false,
-							noiseSuppression: false,
-						},
-					});
-					v.srcObject = stream;
-					await v.play();
-					console.log("Mic/Camera granted");
+  <script>
+    const statusDiv = document.getElementById("status");
 
-					// 4) If you reach here, Start is 100% working.
-					//    At this point you can put back the full app code (runApp(...))
-					alert(
-						"Start pipeline OK. I can now re-enable the full ritual code."
-					);
-				} catch (e) {
-					fail("Start failed: " + (e.message || e));
-					console.error(e);
-				}
-			});
+    document.getElementById("startButton").addEventListener("click", () => {
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: "user" }
+      })
+      .then(stream => {
+        statusDiv.textContent = "✅ Mic & Camera access granted. Activating Stellar Shield...";
+        launchShield(stream);
+      })
+      .catch(err => {
+        console.warn("⚠️ Full access denied, trying mic only...", err);
+        // Fallback to mic-only
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(audioStream => {
+            statusDiv.textContent = "🎙️ Audio-only mode active. Activating Stellar Shield...";
+            launchShield(audioStream);
+          })
+          .catch(audioErr => {
+            console.error("❌ Mic access also failed.", audioErr);
+            statusDiv.textContent = "🚫 Permission denied. Cannot activate Stellar Shield.";
+            alert("Permission denied for microphone and camera. The shield cannot be activated.");
+          });
+      });
+    });
 
-			// show any silent errors
-			window.addEventListener("error", (e) =>
-				alert("JS error: " + e.message)
-			);
-			window.addEventListener("unhandledrejection", (e) =>
-				alert("Promise error: " + (e.reason?.message || e.reason))
-			);
-		</script>
-	</body>
+    function launchShield(stream) {
+      // Optional video preview if available
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.autoplay = true;
+        video.muted = true;
+        document.body.appendChild(video);
+      }
+
+      // ⚡ Insert your activation logic here
+      console.log("🛡️ Shield online. Energy field stabilizing.");
+    }
+  </script>
+</body>
 </html>
