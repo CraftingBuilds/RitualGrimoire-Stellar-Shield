@@ -1,3 +1,0 @@
-[console_scripts]
-ritualgrimoire-stellar-shield = ritualgrimoire_stellar_shield:main
-
