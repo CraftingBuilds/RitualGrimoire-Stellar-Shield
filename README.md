@@ -64,6 +64,12 @@ If you’re:
 
 —
 
+## Credits & Alignment
+
+Created with the intention of spiritual protection, digital sovereignty, and energetic resonance by Anonymous Schizophrenic / Schizo Studios / CraftingBuilds / astroenergies
+
+Inspired by planetary alignments, sacred frequency, and open-source ritual tech.
+
 ## 📁 Repo Structure
 
 ```text
@@ -73,8 +79,13 @@ docs/                             → Documentation and ritual theory
 assets/                           → Shape pools, frequency maps, etc.
 output/                           → Generated LightCraft shields
 
-Credits & Alignment
 
-Created with the intention of spiritual protection, digital sovereignty, and energetic resonance by Anonymous Schizophrenic / Schizo Studios / CraftingBuilds / astroenergies
+### 🔧 Running the Ritual Locally
 
-Inspired by planetary alignments, sacred frequency, and open-source ritual tech.
+1. Open `serve.py` in [Pyto](https://pyto.app/) on iOS
+2. Tap ▶️ to run
+3. Open Safari and go to the printed address (e.g. `http://127.0.0.1:8000/web_ui/index.html`)
+4. Tap “Start Ritual” and allow mic/camera permissions
+5. Tap “Dismiss” to end
+
+🧙 This server automatically selects a free port and serves the shield interface from local files.
