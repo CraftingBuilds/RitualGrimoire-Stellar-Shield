@@ -1,0 +1,13 @@
+MANIFEST.in
+README.md
+setup.cfg
+setup.py
+RitualGrimoire_Stellar_Shield.egg-info/PKG-INFO
+RitualGrimoire_Stellar_Shield.egg-info/SOURCES.txt
+RitualGrimoire_Stellar_Shield.egg-info/dependency_links.txt
+RitualGrimoire_Stellar_Shield.egg-info/entry_points.txt
+RitualGrimoire_Stellar_Shield.egg-info/top_level.txt
+ritualgrimoire_stellar_shield/__init__.py
+ritualgrimoire_stellar_shield/__main__.py
+ritualgrimoire_stellar_shield/main_view.py
+ritualgrimoire_stellar_shield/main_view.pytoui
