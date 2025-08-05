@@ -70,6 +70,14 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
    function ampFade(target, seconds) {
      return new Promise(res => ￼{￼
     const s = sensors.sample();
+    console.log("[sensors] Sample:", s);
+    console.log("Mic RMS:", s?.mic?.rms, "Light Motion:", s?.light?.motion);
+    
+    if (!s || !s.mic || !s.light || !Number.isFinite(s.mic.rms)) {
+  console.warn("⚠️ Sensor data not ready or invalid");
+  rafId = requestAnimationFrame(loop); // keep retrying
+  return;
+}
 
     // Compute luminance normalization & drop rate
     const yNorm = normLuminance(s.light.luminance, s.cal.lightDarkRef, s.cal.lightBrightRef);
