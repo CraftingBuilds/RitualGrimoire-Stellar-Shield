@@ -134,6 +134,8 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
       boundaryGain: (dd.active ? mappings.danger.response.boundary.edge_gain : 1.0),
       meshGain: (dd.active ? mappings.danger.response.boundary.mesh_gain : 1.0)
     });
+    
+    scale: Number.isFinite(scale) ? scale : 1.0,
 
     rafId = requestAnimationFrame(loop);
   }
@@ -177,6 +179,9 @@ return { stop: () => { running = false; /* next frame stops */ setTimeout(stopAl
 function drawScene(ctx, canvas, p) {
   const { width:w, height:h } = canvas;
   const vmin = Math.min(w, h);
+  let scale = Number.isFinite(p.scale) ?  : 1.0; // ✅ fallback
+
+  const r = (p.bubbleVmin / 100) * vmin * scale;
 
   // backdrop with brightness as gamma
   ctx.save();
@@ -212,7 +217,7 @@ function drawScene(ctx, canvas, p) {
   const rot = (t * p.rotDegPerSec) * Math.PI / 180;
   ctx.translate(cx, cy);
   ctx.rotate(rot);
-  ctx.scale(p.scale, p.scale);
+  ctx.scale(scale, scale);
 
   drawSacred(ctx, vmin, p.shapeList);
 
