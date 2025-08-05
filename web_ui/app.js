@@ -44,6 +44,10 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
   loop();
 
   async function loop() {
+<<<<<<< HEAD
+    console.log("[loop] Running shield loop frame");
+=======
+>>>>>>> f777ade05afc7fdbeef55d4edc4fae399cca2d7b
     if (!running) return stopAll();
     // ... your loop body ...
     }
@@ -69,6 +73,17 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
    function ampFade(target, seconds) {
      return new Promise(res => ￼{￼
     const s = sensors.sample();
+<<<<<<< HEAD
+    console.log("[sensors] Sample:", s);
+    console.log("Mic RMS:", s?.mic?.rms, "Light Motion:", s?.light?.motion);
+    
+    if (!s || !s.mic || !s.light || !Number.isFinite(s.mic.rms)) {
+  console.warn("⚠️ Sensor data not ready or invalid");
+  rafId = requestAnimationFrame(loop); // keep retrying
+  return;
+}
+=======
+>>>>>>> f777ade05afc7fdbeef55d4edc4fae399cca2d7b
 
     // Compute luminance normalization & drop rate
     const yNorm = normLuminance(s.light.luminance, s.cal.lightDarkRef, s.cal.lightBrightRef);
@@ -134,6 +149,11 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
       boundaryGain: (dd.active ? mappings.danger.response.boundary.edge_gain : 1.0),
       meshGain: (dd.active ? mappings.danger.response.boundary.mesh_gain : 1.0)
     });
+<<<<<<< HEAD
+    
+    scale: Number.isFinite(scale) ? scale : 1.0,
+=======
+>>>>>>> f777ade05afc7fdbeef55d4edc4fae399cca2d7b
 
     rafId = requestAnimationFrame(loop);
   }
@@ -177,6 +197,12 @@ return { stop: () => { running = false; /* next frame stops */ setTimeout(stopAl
 function drawScene(ctx, canvas, p) {
   const { width:w, height:h } = canvas;
   const vmin = Math.min(w, h);
+<<<<<<< HEAD
+  let scale = Number.isFinite(p.scale) ?  : 1.0; // ✅ fallback
+
+  const r = (p.bubbleVmin / 100) * vmin * scale;
+=======
+>>>>>>> f777ade05afc7fdbeef55d4edc4fae399cca2d7b
 
   // backdrop with brightness as gamma
   ctx.save();
@@ -212,7 +238,11 @@ function drawScene(ctx, canvas, p) {
   const rot = (t * p.rotDegPerSec) * Math.PI / 180;
   ctx.translate(cx, cy);
   ctx.rotate(rot);
+<<<<<<< HEAD
+  ctx.scale(scale, scale);
+=======
   ctx.scale(p.scale, p.scale);
+>>>>>>> f777ade05afc7fdbeef55d4edc4fae399cca2d7b
 
   drawSacred(ctx, vmin, p.shapeList);
 
