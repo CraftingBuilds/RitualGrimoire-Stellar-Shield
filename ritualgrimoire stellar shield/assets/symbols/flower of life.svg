@@ -1,0 +1,7 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" stroke="#cfe8ff" fill="none" stroke-width="2">
+  <defs><circle id="c" cx="100" cy="100" r="40"/></defs>
+  <use href="#c"/><use href="#c" x="-40"/><use href="#c" x="40"/>
+  <use href="#c" y="-34.64"/><use href="#c" y="34.64"/>
+  <use href="#c" x="-20" y="-34.64"/><use href="#c" x="20" y="-34.64"/>
+  <use href="#c" x="-20" y="34.64"/><use href="#c" x="20" y="34.64"/>
+</svg>

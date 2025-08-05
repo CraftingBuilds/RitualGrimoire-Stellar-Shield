@@ -1,0 +1,38 @@
+{
+  "brightness": { "out_min": 0.55, "out_max": 0.90, "curve": "linear" },
+  "bloom":      { "out_min": 0.30, "out_max": 0.80, "curve": "ease_in_out" },
+
+  "scale_from_rms": { "out_min": 0.98, "out_max": 1.18, "curve": "ease_out" },
+  "rotation_from_rms": { "out_min": 8.0, "out_max": 14.0, "curve": "ease_in" },
+
+  "absorb_from_flux": { "out_min": 0.0, "out_max": 1.0, "decay_ms": 450 },
+  "bubble_from_peak": { "out_min": 0.0, "out_max": 8.0, "decay_ms": 900 },
+
+  "hue_shift": {
+    "low": 205, "lowmid": 215, "mid": 200, "high": 190,
+    "mix": true, "hue_max_shift_deg": 12
+  },
+
+  "danger": {
+    "thresholds": {
+      "rms_db": -20,
+      "spectral_flux": 1.9,
+      "high_band_ratio": 0.55,
+      "luminance_drop_rate": 0.20,
+      "motion_score": 0.35
+    },
+    "require_any": 2,
+    "sustain_ms": 1200,
+    "cooldown_ms": 6000,
+    "response": {
+      "brightness_strategy": "stealth",
+      "rotation_boost": "modest",
+      "bias_duration_ms": 20000,
+      "shape_weights": { "warding": 0.55, "containment": 0.30, "neutral": 0.10, "calming": 0.05 },
+      "boundary": { "edge_gain": 1.4, "mesh_gain": 1.3 },
+      "absorb_gain": 1.35
+    }
+  },
+
+  "safety": { "max_visual_mod_hz": 1.5, "min_brightness": 0.45, "max_brightness": 0.92 }
+}

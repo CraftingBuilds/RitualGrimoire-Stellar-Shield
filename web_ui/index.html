@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellar Shield</title>
+  <style>
+    body {
+      background-color: #0d0d1a;
+      color: #f0f8ff;
+      font-family: "Segoe UI", sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 1em;
+      color: #a8d8ff;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 0.7em 1.5em;
+      background-color: #282c34;
+      color: #fff;
+      border: 2px solid #a8d8ff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1f3b75;
+    }
+
+    #status {
+      margin-top: 2em;
+      font-size: 1em;
+    }
+
+    video {
+      margin-top: 1.5em;
+      max-width: 100%;
+      border: 2px solid #a8d8ff;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌌 Stellar Shield</h1>
+  <p>Activate your energetic defense field using sound and cosmic frequencies.</p>
+  <button id="startButton">🛡️ Start Shield</button>
+  <div id="status">Awaiting activation...</div>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+
+    document.getElementById("startButton").addEventListener("click", () => {
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: "user" }
+      })
+      .then(stream => {
+        statusDiv.textContent = "✅ Mic & Camera access granted. Activating Stellar Shield...";
+        launchShield(stream);
+      })
+      .catch(err => {
+        console.warn("⚠️ Full access denied, trying mic only...", err);
+        // Fallback to mic-only
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(audioStream => {
+            statusDiv.textContent = "🎙️ Audio-only mode active. Activating Stellar Shield...";
+            launchShield(audioStream);
+          })
+          .catch(audioErr => {
+            console.error("❌ Mic access also failed.", audioErr);
+            statusDiv.textContent = "🚫 Permission denied. Cannot activate Stellar Shield.";
+            alert("Permission denied for microphone and camera. The shield cannot be activated.");
+          });
+      });
+    });
+
+    function launchShield(stream) {
+      // Optional video preview if available
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.autoplay = true;
+        video.muted = true;
+        document.body.appendChild(video);
+      }
+
+      // ⚡ Insert your activation logic here
+      console.log("🛡️ Shield online. Energy field stabilizing.");
+    }
+  </script>
+</body>
+</html>
