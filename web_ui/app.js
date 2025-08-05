@@ -44,6 +44,7 @@ export async function runApp({ sensors, mappings, pools, canvas, ac }) {
   loop();
 
   async function loop() {
+    console.log("[loop] Running shield loop frame");
     if (!running) return stopAll();
     // ... your loop body ...
     }
