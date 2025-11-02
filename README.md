@@ -89,3 +89,5 @@ output/                           → Generated LightCraft shields
 5. Tap “Dismiss” to end
 
 🧙 This server automatically selects a free port and serves the shield interface from local files.
+
+%%This repository needs a code review%%
