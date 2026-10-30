@@ -1,49 +1,83 @@
 <!DOCTYPE html>
-<html lang=“en”>
-<head>
-  <meta charset=“UTF-8” />
-  <meta name=“viewport” content=“width=device-width, initial-scale=1.0, viewport-fit=cover” />
-  <title>Stellar Shield – Test Mode</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #0b1020;
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, “Segoe UI”, Roboto, Oxygen, Ubuntu, sans-serif;
-      height: 100%;
-      overflow: hidden;
-    }
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Stellar Shield</title>
+    <style>
+      :root {
+        --bg-0: #040816;
+        --bg-1: #0f1d3a;
+        --panel: rgba(15, 22, 46, 0.78);
+        --line: rgba(164, 203, 255, 0.35);
+        --text: #eaf5ff;
+        --muted: #a9bfe3;
+        --glow: rgba(132, 201, 255, 0.72);
+      }
 
-    #shield-canvas {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-      touch-action: none;
-    }
+      * { box-sizing: border-box; }
 
-    .loading-text {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 14px;
-      opacity: 0.6;
-    }
-  </style>
-</head>
-<body>
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(circle at center, var(--bg-1), var(--bg-0) 60%);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
 
-  <canvas id=“shield-canvas”></canvas>
-  <div class=“loading-text”>🛡️ Stellar Shield is running...</div>
+      body {
+        display: grid;
+        place-items: center;
+      }
 
-  <script type=“module”>
-    import { runApp } from ‘./app.js’;
+      #shield-canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        background: transparent;
+        touch-action: none;
+      }
 
-    const canvas = document.getElementById(‘shield-canvas’);
-    runApp({ canvas }).catch(err => {
-      console.error(“❌ Failed to run Stellar Shield:”, err);
-    });
-  </script>
+      .status {
+        position: fixed;
+        left: 20px;
+        top: 16px;
+        z-index: 10;
+        min-width: 200px;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+        color: var(--muted);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 0 24px rgba(96, 162, 255, 0.18);
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
 
-</body>
+      .status strong {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="shield-canvas"></canvas>
+    <div class="status"><strong>Stellar Shield</strong> // online</div>
+
+    <script type="module">
+      import { runApp } from './app.js';
+
+      const canvas = document.getElementById('shield-canvas');
+      if (!canvas) {
+        throw new Error('Canvas element not found.');
+      }
+
+      runApp({ canvas }).catch((error) => {
+        console.error('Failed to run Stellar Shield:', error);
+      });
+    </script>
+  </body>
 </html>
