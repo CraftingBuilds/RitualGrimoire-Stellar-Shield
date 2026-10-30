@@ -1,5 +1,5 @@
 const starField = [];
-const runeSymbols = ["✦", "✧", "◈", "◎", "✺", "✹"]; 
+const runeSymbols = ["✦", "✧", "◈", "◎", "✺", "✹"];
 
 function makeStars(count) {
   const data = [];
@@ -16,10 +16,8 @@ function makeStars(count) {
 }
 
 export async function runApp({ canvas }) {
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    throw new Error('2D canvas context is not available.');
-  }
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("2D canvas context is not available.");
 
   let width = 0;
   let height = 0;
@@ -35,7 +33,7 @@ export async function runApp({ canvas }) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  window.addEventListener('resize', resizeCanvas, { passive: true });
+  window.addEventListener("resize", resizeCanvas, { passive: true });
   resizeCanvas();
 
   let audioCtx = null;
@@ -52,7 +50,7 @@ export async function runApp({ canvas }) {
     osc = audioCtx.createOscillator();
     gainNode = audioCtx.createGain();
 
-    osc.type = 'sine';
+    osc.type = "sine";
     osc.frequency.value = 220;
     gainNode.gain.value = 0.0005;
 
@@ -65,14 +63,14 @@ export async function runApp({ canvas }) {
     gainNode.gain.exponentialRampToValueAtTime(0.04, t + 0.7);
   }
 
-  window.addEventListener('pointerdown', ensureAudio, { once: true });
-  window.addEventListener('keydown', ensureAudio, { once: true });
+  window.addEventListener("pointerdown", ensureAudio, { once: true });
+  window.addEventListener("keydown", ensureAudio, { once: true });
 
   function drawBackground(t, cx, cy) {
     const bg = ctx.createRadialGradient(cx, cy, 40, cx, cy, Math.max(width, height) * 0.8);
-    bg.addColorStop(0, 'rgba(19, 35, 64, 0.96)');
-    bg.addColorStop(0.45, 'rgba(6, 13, 30, 0.97)');
-    bg.addColorStop(1, 'rgba(2, 4, 12, 1)');
+    bg.addColorStop(0, "rgba(19, 35, 64, 0.96)");
+    bg.addColorStop(0.45, "rgba(6, 13, 30, 0.97)");
+    bg.addColorStop(1, "rgba(2, 4, 12, 1)");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, width, height);
 
@@ -101,9 +99,9 @@ export async function runApp({ canvas }) {
       ctx.translate(x, y);
       ctx.rotate(angle + Math.PI / 2);
       ctx.font = `${18 + ((i % 3) * 2)}px Georgia, serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = i % 2 === 0 ? 'rgba(164, 220, 255, 0.9)' : 'rgba(123, 199, 255, 0.75)';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = i % 2 === 0 ? "rgba(164, 220, 255, 0.9)" : "rgba(123, 199, 255, 0.75)";
       ctx.fillText(symbol, 0, 0);
       ctx.restore();
     }
@@ -128,14 +126,14 @@ export async function runApp({ canvas }) {
 
     ctx.beginPath();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = 'rgba(154, 216, 255, 0.92)';
+    ctx.strokeStyle = "rgba(154, 216, 255, 0.92)";
     ctx.shadowBlur = 30;
-    ctx.shadowColor = 'rgba(116, 193, 255, 0.8)';
+    ctx.shadowColor = "rgba(116, 193, 255, 0.8)";
     ctx.arc(0, 0, outerRadius, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(76, 121, 188, 0.12)';
+    ctx.fillStyle = "rgba(76, 121, 188, 0.12)";
     ctx.arc(0, 0, outerRadius * 0.9, 0, Math.PI * 2);
     ctx.fill();
 
@@ -149,7 +147,7 @@ export async function runApp({ canvas }) {
       else ctx.lineTo(x, y);
     }
     ctx.closePath();
-    ctx.strokeStyle = 'rgba(182, 230, 255, 0.7)';
+    ctx.strokeStyle = "rgba(182, 230, 255, 0.7)";
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -161,23 +159,29 @@ export async function runApp({ canvas }) {
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = 'rgba(118, 184, 255, 0.35)';
+    ctx.strokeStyle = "rgba(118, 184, 255, 0.35)";
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(131, 204, 255, 0.12)';
+    ctx.fillStyle = "rgba(131, 204, 255, 0.12)";
     ctx.arc(0, 0, innerRadius * 0.46, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.shadowBlur = 0;
 
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(170, 228, 255, 0.9)';
+    ctx.strokeStyle = "rgba(170, 228, 255, 0.9)";
     ctx.lineWidth = 1.5;
     for (let i = 0; i < 3; i += 1) {
       const offset = (Math.PI * 2 * i) / 3 + t * 0.6;
-      ctx.moveTo(Math.cos(offset) * (outerRadius * 0.2), Math.sin(offset) * (outerRadius * 0.2));
-      ctx.lineTo(Math.cos(offset) * (outerRadius * 0.9), Math.sin(offset) * (outerRadius * 0.9));
+      ctx.moveTo(
+        Math.cos(offset) * (outerRadius * 0.2),
+        Math.sin(offset) * (outerRadius * 0.2)
+      );
+      ctx.lineTo(
+        Math.cos(offset) * (outerRadius * 0.9),
+        Math.sin(offset) * (outerRadius * 0.9)
+      );
     }
     ctx.stroke();
 
@@ -202,15 +206,15 @@ export async function runApp({ canvas }) {
     const cy = height / 2 + 110;
 
     ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.font = '600 26px "Segoe UI", sans-serif';
-    ctx.fillStyle = 'rgba(231, 241, 255, 0.95)';
-    ctx.fillText('Stellar Shield', cx, cy);
+    ctx.fillStyle = "rgba(231, 241, 255, 0.95)";
+    ctx.fillText("Stellar Shield", cx, cy);
 
     ctx.font = '500 12px "Segoe UI", sans-serif';
-    ctx.fillStyle = 'rgba(160, 220, 255, 0.8)';
-    ctx.fillText('PROTECTION • ALIGNMENT • RITUAL', cx, cy + 32);
+    ctx.fillStyle = "rgba(160, 220, 255, 0.8)";
+    ctx.fillText("PROTECTION • ALIGNMENT • RITUAL", cx, cy + 32);
 
     const pulse = 0.5 + (Math.sin(t * 3.2) + 1) * 0.25;
     ctx.strokeStyle = `rgba(175, 232, 255, ${0.5 + pulse * 0.2})`;
@@ -240,7 +244,6 @@ export async function runApp({ canvas }) {
     }
   }
 
-  let lastTime = 0;
   function tick(now) {
     const t = now * 0.001;
     renderFrame(t);
@@ -250,6 +253,6 @@ export async function runApp({ canvas }) {
   requestAnimationFrame(tick);
 }
 
-window.addEventListener('error', (event) => {
-  console.error('Shield runtime error:', event.error || event.message);
+window.addEventListener("error", (event) => {
+  console.error("Shield runtime error:", event.error || event.message);
 });
